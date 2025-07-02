@@ -6,6 +6,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import UserManagement from './pages/UserManagement';
+import ChangePassword from './pages/ChangePassword';
 import { Box, CircularProgress } from '@mui/material';
 
 // Protected Route Component
@@ -104,6 +105,16 @@ const AppRoutes = () => {
           <ProtectedRoute>
             <Layout>
               <Dashboard />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/change-password"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <ChangePassword />
             </Layout>
           </ProtectedRoute>
         }
