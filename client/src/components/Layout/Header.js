@@ -9,6 +9,10 @@ import {
   Avatar,
   Box,
   Divider,
+  ListItemIcon,
+  ListItemText,
+  Select,
+  FormControl,
 } from '@mui/material';
 import {
   AccountCircle,
@@ -23,10 +27,11 @@ import { useNavigate } from 'react-router-dom';
 import { USER_ROLES } from '../../utils/constants';
 
 const Header = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
+  const [langAnchorEl, setLangAnchorEl] = useState(null);
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -34,6 +39,16 @@ const Header = () => {
 
   const handleClose = () => {
     setAnchorEl(null);
+    setLangAnchorEl(null);
+  };
+
+  const handleLangMenu = (event) => {
+    setLangAnchorEl(event.currentTarget);
+  };
+
+  const handleChangeLanguage = (lng) => {
+    i18n.changeLanguage(lng);
+    setLangAnchorEl(null);
   };
 
   const handleLogout = () => {
@@ -100,7 +115,7 @@ const Header = () => {
           >
             <MenuItem onClick={handleProfile}>
               <AccountCircle sx={{ mr: 1 }} />
-              {user?.firstName} {user?.lastName}
+             {user?.firstName} {user?.lastName}
             </MenuItem>
             
             <MenuItem disabled>
@@ -125,6 +140,28 @@ const Header = () => {
             <MenuItem onClick={handleLogout}>
               <Logout sx={{ mr: 1 }} />
               {t('menu.logout')}
+            </MenuItem>
+            <Divider />
+            <MenuItem onClick={handleLangMenu}>
+              <span role="img" aria-label="language" style={{ marginRight: 8 }}>🌐</span>
+              {t('menu.changeLanguage')}
+            </MenuItem>
+          </Menu>
+          <Menu
+            id="lang-menu"
+            anchorEl={langAnchorEl}
+            open={Boolean(langAnchorEl)}
+            onClose={handleClose}
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+            transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+          >
+            <MenuItem onClick={() => handleChangeLanguage('en')} selected={i18n.language === 'en'}>
+              <ListItemIcon>🇺🇸</ListItemIcon>
+              <ListItemText>English</ListItemText>
+            </MenuItem>
+            <MenuItem onClick={() => handleChangeLanguage('es')} selected={i18n.language === 'es'}>
+              <ListItemIcon>🇪🇸</ListItemIcon>
+              <ListItemText>Español</ListItemText>
             </MenuItem>
           </Menu>
         </Box>

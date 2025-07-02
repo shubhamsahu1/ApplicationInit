@@ -77,6 +77,7 @@ const resources = {
       'menu.changePassword': 'Change Password',
       'menu.logout': 'Logout',
       'menu.userManagement': 'User Management',
+      'menu.changeLanguage': 'Change Language',
       
       // Validation
       'validation.required': 'This field is required',
@@ -159,6 +160,7 @@ const resources = {
       'menu.changePassword': 'Cambiar Contraseña',
       'menu.logout': 'Cerrar Sesión',
       'menu.userManagement': 'Gestión de Usuarios',
+      'menu.changeLanguage': 'Cambiar Idioma',
       
       // Validation
       'validation.required': 'Este campo es requerido',
