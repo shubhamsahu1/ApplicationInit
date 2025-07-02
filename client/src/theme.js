@@ -50,9 +50,6 @@ const theme = createTheme({
       fontWeight: 500,
     },
   },
-  shape: {
-    borderRadius: 8,
-  },
   components: {
     MuiButton: {
       styleOverrides: {

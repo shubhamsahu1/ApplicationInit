@@ -60,7 +60,7 @@ const Header = () => {
   const open = Boolean(anchorEl);
 
   return (
-    <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+    <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1, borderRadius: 0 }}>
       <Toolbar>
         
         <Typography variant="h6"  sx={{ flexGrow: 1, ml: 4 }}>
@@ -68,9 +68,7 @@ const Header = () => {
         </Typography>
         
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <Typography variant="body2" sx={{ mr: 1 }}>
-            {user?.firstName} {user?.lastName}
-          </Typography>
+         
           
           <IconButton
             size="large"
@@ -102,7 +100,7 @@ const Header = () => {
           >
             <MenuItem onClick={handleProfile}>
               <AccountCircle sx={{ mr: 1 }} />
-              {t('menu.userName')}: {user?.firstName} {user?.lastName}
+              {user?.firstName} {user?.lastName}
             </MenuItem>
             
             <MenuItem disabled>
