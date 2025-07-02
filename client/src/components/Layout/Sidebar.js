@@ -9,6 +9,7 @@ import {
   Divider,
   useTheme,
   useMediaQuery,
+  Toolbar,
 } from '@mui/material';
 import {
   Dashboard,
@@ -98,6 +99,7 @@ const Sidebar = ({ open, onClose }) => {
           },
         }}
       >
+        <Toolbar />
         {drawerContent}
       </Drawer>
     );
@@ -115,6 +117,7 @@ const Sidebar = ({ open, onClose }) => {
       }}
       open
     >
+      <Toolbar />
       {drawerContent}
     </Drawer>
   );

@@ -7,6 +7,7 @@ import Register from '../pages/Register';
 import Dashboard from '../pages/Dashboard';
 import UserManagement from '../pages/UserManagement';
 import ChangePassword from '../pages/ChangePassword';
+import Profile from '../pages/Profile';
 import { Box, CircularProgress } from '@mui/material';
 import { USER_ROLES } from '../utils/constants';
 
@@ -116,6 +117,16 @@ const AppRoutes = () => {
           <ProtectedRoute>
             <Layout>
               <ChangePassword />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/profile"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <Profile />
             </Layout>
           </ProtectedRoute>
         }
