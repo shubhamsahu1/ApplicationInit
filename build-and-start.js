@@ -26,7 +26,7 @@ try {
   execSync('cd client && npm run build', { stdio: 'inherit' });
 
   // Check if build was successful
-  const distPath = path.join(clientPath, 'dist');
+  const distPath = path.join(clientPath, 'build');
   if (!fs.existsSync(distPath)) {
     console.error('❌ Build failed! dist folder not found.');
     process.exit(1);

@@ -47,7 +47,7 @@ app.use('/api/user', userRoutes);
 
 // Serve static files from the React app (only in production)
 if (isProduction) {
-  const distPath = path.join(__dirname, '../client/dist');
+  const distPath = path.join(__dirname, '../client/build');
   
   // Check if dist folder exists
   if (fs.existsSync(distPath)) {

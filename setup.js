@@ -3,6 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
+require('dotenv').config();
 
 console.log('🚀 Setting up Initial Dashboard Application...\n');
 
@@ -19,6 +20,19 @@ if (!fs.existsSync('.env')) {
   }
 } else {
   console.log('✅ .env file already exists.\n');
+}
+
+// Check if client .env file exists
+if (!fs.existsSync('client/.env')) {
+  console.log('📝 Creating client .env file...');
+  const clientEnvContent = `# Frontend Configuration
+REACT_APP_API_URL=${process.env.REACT_APP_API_URL}
+REACT_APP_NAME=${process.env.REACT_APP_NAME}`;
+  
+  fs.writeFileSync('client/.env', clientEnvContent);
+  console.log('✅ Client .env file created successfully!\n');
+} else {
+  console.log('✅ Client .env file already exists.\n');
 }
 
 // Install dependencies
