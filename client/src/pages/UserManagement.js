@@ -44,6 +44,7 @@ const UserManagement = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [editingUser, setEditingUser] = useState(null);
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
+  const [formErrors, setFormErrors] = useState({});
 
   const [formData, setFormData] = useState({
     username: '',
@@ -51,6 +52,7 @@ const UserManagement = () => {
     password: '',
     firstName: '',
     lastName: '',
+    mobile: '',
     role: USER_ROLES.STAFF,
   });
 
@@ -90,6 +92,7 @@ const UserManagement = () => {
         password: '',
         firstName: user.firstName,
         lastName: user.lastName,
+        mobile: user.mobile,
         role: user.role,
       });
     } else {
@@ -100,6 +103,7 @@ const UserManagement = () => {
         password: '',
         firstName: '',
         lastName: '',
+        mobile: '',
         role: USER_ROLES.STAFF,
       });
     }
@@ -115,13 +119,26 @@ const UserManagement = () => {
       password: '',
       firstName: '',
       lastName: '',
+      mobile: '',
       role: USER_ROLES.STAFF,
     });
   };
 
+  const validateForm = () => {
+    const errors = {};
+    if (!formData.username) errors.username = 'Username is required';
+    if (!formData.firstName) errors.firstName = 'First name is required';
+    if (!formData.mobile) errors.mobile = 'Mobile number is required';
+    else if (!/^\d{10}$/.test(formData.mobile)) errors.mobile = 'Enter a valid 10-digit mobile number';
+    if (formData.email && !/\S+@\S+\.\S+/.test(formData.email)) errors.email = 'Enter a valid email address';
+    if (!editingUser && !formData.password) errors.password = 'Password is required';
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+    if (!validateForm()) return;
     try {
       if (editingUser) {
         // Update user
@@ -134,7 +151,6 @@ const UserManagement = () => {
         await userAPI.createUser(formData);
         showSnackbar('User created successfully');
       }
-      
       handleCloseDialog();
       fetchUsers();
     } catch (error) {
@@ -210,6 +226,7 @@ const UserManagement = () => {
               <TableCell>Name</TableCell>
               <TableCell>Username</TableCell>
               <TableCell>Email</TableCell>
+              <TableCell>Mobile</TableCell>
               <TableCell>Role</TableCell>
               <TableCell>Status</TableCell>
               <TableCell>Actions</TableCell>
@@ -221,6 +238,7 @@ const UserManagement = () => {
                 <TableCell>{user.firstName} {user.lastName}</TableCell>
                 <TableCell>{user.username}</TableCell>
                 <TableCell>{user.email}</TableCell>
+                <TableCell>{user.mobile}</TableCell>
                 <TableCell>
                   <Chip
                     label={USER_ROLE_LABELS[user.role]}
@@ -281,13 +299,14 @@ const UserManagement = () => {
             />
             <TextField
               margin="normal"
-              required
               fullWidth
               label="Email"
               name="email"
               type="email"
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              error={!!formErrors.email}
+              helperText={formErrors.email}
             />
             {!editingUser && (
               <TextField
@@ -322,12 +341,24 @@ const UserManagement = () => {
             />
             <TextField
               margin="normal"
-              required
               fullWidth
               label="Last Name"
               name="lastName"
               value={formData.lastName}
               onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+              error={!!formErrors.lastName}
+              helperText={formErrors.lastName}
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              label="Mobile"
+              name="mobile"
+              value={formData.mobile}
+              onChange={(e) => setFormData({ ...formData, mobile: e.target.value })}
+              error={!!formErrors.mobile}
+              helperText={formErrors.mobile}
             />
             <FormControl fullWidth margin="normal">
               <InputLabel>Role</InputLabel>

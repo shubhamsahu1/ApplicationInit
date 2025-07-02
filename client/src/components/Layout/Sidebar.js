@@ -24,9 +24,7 @@ const drawerWidth = 240;
 
 const menuItems = [
   { text: 'nav.dashboard', icon: Dashboard, path: '/dashboard' },
-  { text: 'nav.users', icon: People, path: '/users' },
   { text: 'nav.profile', icon: Person, path: '/profile' },
-  { text: 'nav.settings', icon: Settings, path: '/settings' },
 ];
 
 const Sidebar = ({ open, onClose }) => {

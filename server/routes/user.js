@@ -29,10 +29,19 @@ router.get('/profile', auth, async (req, res) => {
 // @access  Private
 router.put('/profile', auth, async (req, res) => {
   try {
-    const { firstName, lastName, email } = req.body;
+    const { firstName, lastName, mobile, email } = req.body;
     
     const user = await User.findById(req.user._id);
     
+    if (mobile && mobile !== user.mobile) {
+      const existingUser = await User.findOne({ mobile });
+      if (existingUser) {
+        return res.status(400).json({
+          success: false,
+          message: 'Mobile number already exists'
+        });
+      }
+    }
     if (email && email !== user.email) {
       const existingUser = await User.findOne({ email });
       if (existingUser) {
@@ -45,6 +54,7 @@ router.put('/profile', auth, async (req, res) => {
     
     user.firstName = firstName || user.firstName;
     user.lastName = lastName || user.lastName;
+    user.mobile = mobile || user.mobile;
     user.email = email || user.email;
     
     await user.save();
@@ -91,17 +101,17 @@ router.get('/all', adminAuth, async (req, res) => {
 // @access  Private/Admin
 router.post('/create', adminAuth, async (req, res) => {
   try {
-    const { username, email, password, firstName, lastName, role } = req.body;
+    const { username, mobile, password, firstName, lastName, role, email } = req.body;
 
     // Check if user already exists
     const existingUser = await User.findOne({ 
-      $or: [{ email }, { username }] 
+      $or: [{ mobile }, { username }, ...(email ? [{ email }] : [])] 
     });
 
     if (existingUser) {
       return res.status(400).json({
         success: false,
-        message: 'User with this email or username already exists'
+        message: 'User with this mobile, email, or username already exists'
       });
     }
 
@@ -116,11 +126,12 @@ router.post('/create', adminAuth, async (req, res) => {
     // Create new user
     const user = new User({
       username,
-      email,
+      mobile,
       password,
       firstName,
       lastName,
-      role: role || USER_ROLES.STAFF
+      role: role || USER_ROLES.STAFF,
+      email: email || undefined
     });
 
     await user.save();
@@ -146,7 +157,7 @@ router.post('/create', adminAuth, async (req, res) => {
 // @access  Private/Admin
 router.put('/:id', adminAuth, async (req, res) => {
   try {
-    const { firstName, lastName, email, role } = req.body;
+    const { firstName, lastName, mobile, role, email } = req.body;
     
     const user = await User.findById(req.params.id);
     
@@ -157,6 +168,15 @@ router.put('/:id', adminAuth, async (req, res) => {
       });
     }
     
+    if (mobile && mobile !== user.mobile) {
+      const existingUser = await User.findOne({ mobile });
+      if (existingUser) {
+        return res.status(400).json({
+          success: false,
+          message: 'Mobile number already exists'
+        });
+      }
+    }
     if (email && email !== user.email) {
       const existingUser = await User.findOne({ email });
       if (existingUser) {
@@ -177,8 +197,9 @@ router.put('/:id', adminAuth, async (req, res) => {
     
     user.firstName = firstName || user.firstName;
     user.lastName = lastName || user.lastName;
-    user.email = email || user.email;
+    user.mobile = mobile || user.mobile;
     user.role = role || user.role;
+    user.email = email || user.email;
     
     await user.save();
     

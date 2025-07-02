@@ -18,6 +18,7 @@ const Profile = () => {
     lastName: '',
     username: '',
     email: '',
+    mobile: '',
   });
   const [formErrors, setFormErrors] = useState({});
   const [loading, setLoading] = useState(false);
@@ -37,6 +38,7 @@ const Profile = () => {
         lastName: res.data.user.lastName || '',
         username: res.data.user.username || '',
         email: res.data.user.email || '',
+        mobile: res.data.user.mobile || '',
       });
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to load profile');
@@ -50,7 +52,9 @@ const Profile = () => {
     if (!formData.firstName) errors.firstName = t('validation.required');
     if (!formData.lastName) errors.lastName = t('validation.required');
     if (!formData.username) errors.username = t('validation.required');
-    if (!formData.email) errors.email = t('validation.required');
+    if (formData.email && !/\S+@\S+\.\S+/.test(formData.email)) {
+      errors.email = t('validation.email');
+    }
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -125,7 +129,6 @@ const Profile = () => {
             />
             <TextField
               margin="normal"
-              required
               fullWidth
               name="email"
               label={t('auth.email')}
@@ -133,7 +136,17 @@ const Profile = () => {
               onChange={handleChange}
               error={!!formErrors.email}
               helperText={formErrors.email}
-              disabled
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="mobile"
+              label={t('user.mobile')}
+              value={formData.mobile}
+              onChange={handleChange}
+              error={!!formErrors.mobile}
+              helperText={formErrors.mobile}
             />
             <Button
               type="submit"
