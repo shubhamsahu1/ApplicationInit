@@ -20,6 +20,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { USER_ROLES } from '../../utils/constants';
 
 const Header = () => {
   const { t } = useTranslation();
@@ -110,7 +111,7 @@ const Header = () => {
             
             <Divider />
             
-            {user?.role === 'admin' && (
+            {user?.role === USER_ROLES.ADMIN && (
               <MenuItem onClick={handleUserManagement}>
                 <People sx={{ mr: 1 }} />
                 User Management

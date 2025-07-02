@@ -2,6 +2,7 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const { auth, adminAuth } = require('../middleware/auth');
+const { USER_ROLES, isValidRole } = require('../../constants/roles');
 
 const router = express.Router();
 
@@ -32,10 +33,10 @@ router.post('/register', auth, adminAuth, async (req, res) => {
     }
 
     // Validate role
-    if (role && !['admin', 'staff'].includes(role)) {
+    if (role && !isValidRole(role)) {
       return res.status(400).json({
         success: false,
-        message: 'Invalid role. Must be admin or staff'
+        message: `Invalid role. Must be ${Object.values(USER_ROLES).join(' or ')}`
       });
     }
 
@@ -46,7 +47,7 @@ router.post('/register', auth, adminAuth, async (req, res) => {
       password,
       firstName,
       lastName,
-      role: role || 'staff'
+      role: role || USER_ROLES.STAFF
     });
 
     await user.save();

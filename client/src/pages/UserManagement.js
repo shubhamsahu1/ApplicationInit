@@ -35,6 +35,7 @@ import {
 } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import { userAPI } from '../services/api';
+import { USER_ROLES, USER_ROLE_LABELS, USER_ROLE_COLORS } from '../utils/constants';
 
 const UserManagement = () => {
   const { t } = useTranslation();
@@ -50,7 +51,7 @@ const UserManagement = () => {
     password: '',
     firstName: '',
     lastName: '',
-    role: 'staff',
+    role: USER_ROLES.STAFF,
   });
 
   const [showPassword, setShowPassword] = useState(false);
@@ -99,7 +100,7 @@ const UserManagement = () => {
         password: '',
         firstName: '',
         lastName: '',
-        role: 'staff',
+        role: USER_ROLES.STAFF,
       });
     }
     setOpenDialog(true);
@@ -114,7 +115,7 @@ const UserManagement = () => {
       password: '',
       firstName: '',
       lastName: '',
-      role: 'staff',
+      role: USER_ROLES.STAFF,
     });
   };
 
@@ -188,9 +189,11 @@ const UserManagement = () => {
   }
 
   return (
-    <Box>
+    <Box sx={{ p: 3 }}>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
-        <Typography variant="h4">User Management</Typography>
+        <Typography variant="h4" component="h1">
+          User Management
+        </Typography>
         <Button
           variant="contained"
           startIcon={<Add />}
@@ -220,8 +223,8 @@ const UserManagement = () => {
                 <TableCell>{user.email}</TableCell>
                 <TableCell>
                   <Chip
-                    label={user.role}
-                    color={user.role === 'admin' ? 'error' : 'primary'}
+                    label={USER_ROLE_LABELS[user.role]}
+                    color={USER_ROLE_COLORS[user.role]}
                     size="small"
                   />
                 </TableCell>
@@ -333,8 +336,11 @@ const UserManagement = () => {
                 label="Role"
                 onChange={(e) => setFormData({ ...formData, role: e.target.value })}
               >
-                <MenuItem value="staff">Staff</MenuItem>
-                <MenuItem value="admin">Admin</MenuItem>
+                {Object.entries(USER_ROLES).map(([key, value]) => (
+                  <MenuItem key={value} value={value}>
+                    {USER_ROLE_LABELS[value]}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </Box>
