@@ -41,6 +41,7 @@ const resources = {
       'auth.loginError': 'Invalid email or password',
       'auth.registerSuccess': 'Registration successful!',
       'auth.logoutSuccess': 'Logged out successfully',
+      'auth.username': 'Username',
       
       // User
       'user.profile': 'User Profile',
@@ -122,6 +123,7 @@ const resources = {
       'auth.loginError': 'Correo o contraseña inválidos',
       'auth.registerSuccess': '¡Registro exitoso!',
       'auth.logoutSuccess': 'Sesión cerrada exitosamente',
+      'auth.username': 'Nombre de Usuario',
       
       // User
       'user.profile': 'Perfil de Usuario',

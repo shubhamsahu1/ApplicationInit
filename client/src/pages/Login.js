@@ -21,7 +21,7 @@ const Login = () => {
   const navigate = useNavigate();
   
   const [formData, setFormData] = useState({
-    email: '',
+    username: '',
     password: '',
     rememberMe: false,
   });
@@ -32,10 +32,8 @@ const Login = () => {
   const validateForm = () => {
     const errors = {};
     
-    if (!formData.email) {
-      errors.email = t('validation.required');
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      errors.email = t('validation.email');
+    if (!formData.username) {
+      errors.username = t('validation.required');
     }
     
     if (!formData.password) {
@@ -78,7 +76,7 @@ const Login = () => {
     
     try {
       const result = await login({
-        email: formData.email,
+        username: formData.username,
         password: formData.password,
       });
       
@@ -127,15 +125,15 @@ const Login = () => {
               margin="normal"
               required
               fullWidth
-              id="email"
-              label={t('auth.email')}
-              name="email"
-              autoComplete="email"
+              id="username"
+              label={t('user.username')}
+              name="username"
+              autoComplete="username"
               autoFocus
-              value={formData.email}
+              value={formData.username}
               onChange={handleChange}
-              error={!!formErrors.email}
-              helperText={formErrors.email}
+              error={!!formErrors.username}
+              helperText={formErrors.username}
             />
             
             <TextField
