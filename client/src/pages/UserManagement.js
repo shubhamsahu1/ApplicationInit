@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Box,
   Typography,
@@ -58,11 +58,7 @@ const UserManagement = () => {
 
   const [showPassword, setShowPassword] = useState(false);
 
-  useEffect(() => {
-    fetchUsers();
-  }, []);
-
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
     try {
       setLoading(true);
       const response = await userAPI.getAllUsers();
@@ -73,7 +69,13 @@ const UserManagement = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+  
+  useEffect(() => {
+    fetchUsers();
+  }, [fetchUsers]);
+
+ 
 
   const showSnackbar = (message, severity = 'success') => {
     setSnackbar({ open: true, message, severity });
@@ -126,12 +128,12 @@ const UserManagement = () => {
 
   const validateForm = () => {
     const errors = {};
-    if (!formData.username) errors.username = 'Username is required';
-    if (!formData.firstName) errors.firstName = 'First name is required';
-    if (!formData.mobile) errors.mobile = 'Mobile number is required';
-    else if (!/^\d{10}$/.test(formData.mobile)) errors.mobile = 'Enter a valid 10-digit mobile number';
-    if (formData.email && !/\S+@\S+\.\S+/.test(formData.email)) errors.email = 'Enter a valid email address';
-    if (!editingUser && !formData.password) errors.password = 'Password is required';
+    if (!formData.username) errors.username = t('validation.usernameRequired');
+    if (!formData.firstName) errors.firstName = t('validation.firstNameRequired');
+    if (!formData.mobile) errors.mobile = t('validation.mobileRequired');
+    else if (!/^\d{10}$/.test(formData.mobile)) errors.mobile = t('validation.mobileFormat');
+    if (formData.email && !/\S+@\S+\.\S+/.test(formData.email)) errors.email = t('validation.emailFormat');
+    if (!editingUser && !formData.password) errors.password = t('validation.passwordRequired');
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -145,53 +147,53 @@ const UserManagement = () => {
         const updateData = { ...formData };
         delete updateData.password; // Remove password from update data
         await userAPI.updateUser(editingUser._id, updateData);
-        showSnackbar('User updated successfully');
+        showSnackbar(t('userManagement.userUpdated'));
       } else {
         // Create user
         await userAPI.createUser(formData);
-        showSnackbar('User created successfully');
+        showSnackbar(t('userManagement.userCreated'));
       }
       handleCloseDialog();
       fetchUsers();
     } catch (error) {
       console.error('Error saving user:', error);
-      showSnackbar(error.response?.data?.message || 'Error saving user', 'error');
+      showSnackbar(error.response?.data?.message || t('userManagement.errorSavingUser'), 'error');
     }
   };
 
   const handleToggleStatus = async (userId) => {
     try {
       await userAPI.toggleUserStatus(userId);
-      showSnackbar('User status updated successfully');
+      showSnackbar(t('userManagement.statusUpdated'));
       fetchUsers();
     } catch (error) {
       console.error('Error toggling user status:', error);
-      showSnackbar('Error updating user status', 'error');
+      showSnackbar(t('userManagement.errorUpdatingStatus'), 'error');
     }
   };
 
   const handleDeleteUser = async (userId) => {
-    if (window.confirm('Are you sure you want to delete this user?')) {
+    if (window.confirm(t('userManagement.confirmDelete'))) {
       try {
         await userAPI.deleteUser(userId);
-        showSnackbar('User deleted successfully');
+        showSnackbar(t('userManagement.userDeleted'));
         fetchUsers();
       } catch (error) {
         console.error('Error deleting user:', error);
-        showSnackbar(error.response?.data?.message || 'Error deleting user', 'error');
+        showSnackbar(error.response?.data?.message || t('userManagement.errorDeletingUser'), 'error');
       }
     }
   };
 
   const handleChangePassword = async (userId) => {
-    const newPassword = prompt('Enter new password:');
+    const newPassword = prompt(t('userManagement.enterNewPassword'));
     if (newPassword) {
       try {
         await userAPI.changeUserPassword(userId, { newPassword });
-        showSnackbar('Password changed successfully');
+        showSnackbar(t('userManagement.passwordChanged'));
       } catch (error) {
         console.error('Error changing password:', error);
-        showSnackbar('Error changing password', 'error');
+        showSnackbar(t('userManagement.errorChangingPassword'), 'error');
       }
     }
   };
@@ -199,7 +201,7 @@ const UserManagement = () => {
   if (loading) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" minHeight="400px">
-        <Typography>Loading users...</Typography>
+        <Typography>{t('common.loading')}</Typography>
       </Box>
     );
   }
@@ -208,14 +210,14 @@ const UserManagement = () => {
     <Box sx={{ p: 3 }}>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
         <Typography variant="h4" component="h1">
-          User Management
+          {t('userManagement.title')}
         </Typography>
         <Button
           variant="contained"
           startIcon={<Add />}
           onClick={() => handleOpenDialog()}
         >
-          Add User
+          {t('userManagement.addUser')}
         </Button>
       </Box>
 
@@ -223,13 +225,13 @@ const UserManagement = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Name</TableCell>
-              <TableCell>Username</TableCell>
-              <TableCell>Email</TableCell>
-              <TableCell>Mobile</TableCell>
-              <TableCell>Role</TableCell>
-              <TableCell>Status</TableCell>
-              <TableCell>Actions</TableCell>
+              <TableCell>{t('userManagement.table.name')}</TableCell>
+              <TableCell>{t('userManagement.table.username')}</TableCell>
+              <TableCell>{t('userManagement.table.email')}</TableCell>
+              <TableCell>{t('userManagement.table.mobile')}</TableCell>
+              <TableCell>{t('userManagement.table.role')}</TableCell>
+              <TableCell>{t('userManagement.table.status')}</TableCell>
+              <TableCell>{t('userManagement.table.actions')}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -248,28 +250,28 @@ const UserManagement = () => {
                 </TableCell>
                 <TableCell>
                   <Chip
-                    label={user.isActive ? 'Active' : 'Inactive'}
+                    label={user.isActive ? t('userManagement.status.active') : t('userManagement.status.inactive')}
                     color={user.isActive ? 'success' : 'default'}
                     size="small"
                   />
                 </TableCell>
                 <TableCell>
-                  <Tooltip title="Edit User">
+                  <Tooltip title={t('userManagement.actions.edit')}>
                     <IconButton onClick={() => handleOpenDialog(user)}>
                       <Edit />
                     </IconButton>
                   </Tooltip>
-                  <Tooltip title="Change Password">
+                  <Tooltip title={t('userManagement.actions.changePassword')}>
                     <IconButton onClick={() => handleChangePassword(user._id)}>
                       <Lock />
                     </IconButton>
                   </Tooltip>
-                  <Tooltip title={user.isActive ? 'Deactivate' : 'Activate'}>
+                  <Tooltip title={user.isActive ? t('userManagement.actions.deactivate') : t('userManagement.actions.activate')}>
                     <IconButton onClick={() => handleToggleStatus(user._id)}>
                       {user.isActive ? <VisibilityOff /> : <Visibility />}
                     </IconButton>
                   </Tooltip>
-                  <Tooltip title="Delete User">
+                  <Tooltip title={t('userManagement.actions.delete')}>
                     <IconButton onClick={() => handleDeleteUser(user._id)}>
                       <Delete />
                     </IconButton>
@@ -284,7 +286,7 @@ const UserManagement = () => {
       {/* Add/Edit User Dialog */}
       <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="sm" fullWidth>
         <DialogTitle>
-          {editingUser ? 'Edit User' : 'Add New User'}
+          {editingUser ? t('userManagement.dialog.editTitle') : t('userManagement.dialog.addTitle')}
         </DialogTitle>
         <DialogContent>
           <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
@@ -292,7 +294,7 @@ const UserManagement = () => {
               margin="normal"
               required
               fullWidth
-              label="Username"
+              label={t('userManagement.form.username')}
               name="username"
               value={formData.username}
               onChange={(e) => setFormData({ ...formData, username: e.target.value })}
@@ -300,7 +302,7 @@ const UserManagement = () => {
             <TextField
               margin="normal"
               fullWidth
-              label="Email"
+              label={t('userManagement.form.email')}
               name="email"
               type="email"
               value={formData.email}
@@ -313,7 +315,7 @@ const UserManagement = () => {
                 margin="normal"
                 required
                 fullWidth
-                label="Password"
+                label={t('userManagement.form.password')}
                 name="password"
                 type={showPassword ? 'text' : 'password'}
                 value={formData.password}
@@ -334,7 +336,7 @@ const UserManagement = () => {
               margin="normal"
               required
               fullWidth
-              label="First Name"
+              label={t('userManagement.form.firstName')}
               name="firstName"
               value={formData.firstName}
               onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
@@ -342,7 +344,7 @@ const UserManagement = () => {
             <TextField
               margin="normal"
               fullWidth
-              label="Last Name"
+              label={t('userManagement.form.lastName')}
               name="lastName"
               value={formData.lastName}
               onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
@@ -353,7 +355,7 @@ const UserManagement = () => {
               margin="normal"
               required
               fullWidth
-              label="Mobile"
+              label={t('userManagement.form.mobile')}
               name="mobile"
               value={formData.mobile}
               onChange={(e) => setFormData({ ...formData, mobile: e.target.value })}
@@ -361,10 +363,10 @@ const UserManagement = () => {
               helperText={formErrors.mobile}
             />
             <FormControl fullWidth margin="normal">
-              <InputLabel>Role</InputLabel>
+              <InputLabel>{t('userManagement.form.role')}</InputLabel>
               <Select
                 value={formData.role}
-                label="Role"
+                label={t('userManagement.form.role')}
                 onChange={(e) => setFormData({ ...formData, role: e.target.value })}
               >
                 {Object.entries(USER_ROLES).map(([key, value]) => (
@@ -377,9 +379,9 @@ const UserManagement = () => {
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDialog}>Cancel</Button>
+          <Button onClick={handleCloseDialog}>{t('common.cancel')}</Button>
           <Button onClick={handleSubmit} variant="contained">
-            {editingUser ? 'Update' : 'Create'}
+            {editingUser ? t('common.update') : t('common.create')}
           </Button>
         </DialogActions>
       </Dialog>
