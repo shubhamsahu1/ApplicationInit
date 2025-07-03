@@ -88,7 +88,7 @@ application-init/
    Update the `.env` file with your MongoDB connection string and other settings:
    ```env
    # Server Configuration
-   PORT=5000
+   PORT=4000
    NODE_ENV=development
    
    # MongoDB Configuration
@@ -99,7 +99,7 @@ application-init/
    JWT_EXPIRE=24h
    
    # Frontend Configuration
-   REACT_APP_API_URL=http://localhost:5000/api
+   REACT_APP_API_URL=http://localhost:4000/api
    REACT_APP_NAME=Initial Dashboard
    ```
 

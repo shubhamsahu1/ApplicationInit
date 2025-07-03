@@ -1,7 +1,7 @@
 const express = require('express');
 const User = require('../models/User');
 const { auth, adminAuth } = require('../middleware/auth');
-const { validateUserRegistration, validateProfileUpdate, validatePasswordChange, handleValidationErrors } = require('../middleware/validation');
+const { validateUserRegistration, validateProfileUpdate, handleValidationErrors } = require('../middleware/validation');
 const { body } = require('express-validator');
 const { USER_ROLES, isValidRole } = require('../../constants/roles');
 

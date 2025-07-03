@@ -3,7 +3,7 @@
 ## 🔒 Critical Security Issues
 
 ### 1. **Port Mismatch Between Server and Client**
-- **Issue**: Server runs on port 4000 (env.example) but client proxy points to port 4000, while server/index.js defaults to port 5000
+- **Issue**: Server runs on port 4000 (env.example) but client proxy points to port 4000, while server/index.js defaults to port 4000
 - **Risk**: Connection failures in development mode
 - **Fix**: Standardize ports across configuration
 
