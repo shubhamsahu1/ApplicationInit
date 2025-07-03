@@ -100,6 +100,10 @@ export const AuthProvider = ({ children }) => {
     setError(null);
   };
 
+  const getRole = () => {
+    return user?.role || null;
+  };
+
   const value = {
     user,
     loading,
@@ -111,6 +115,7 @@ export const AuthProvider = ({ children }) => {
     updateUser,
     clearError,
     isAuthenticated: !!user,
+    getRole,
   };
 
   return (
