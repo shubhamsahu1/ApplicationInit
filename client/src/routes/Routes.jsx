@@ -1,14 +1,24 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
-import Layout from '../components/Layout/Layout';
-import Login from '../pages/Login';
-import Register from '../pages/Register';
-import Dashboard from '../pages/Dashboard';
-import UserManagement from '../pages/UserManagement';
-import ChangePassword from '../pages/ChangePassword';
-import Profile from '../pages/Profile';
+import { CircularProgress, Box } from '@mui/material';
 import { ProtectedRoute, PublicRoute } from '../components/ProtectedRoute/ProtectedRoute';
 import { USER_ROLES } from '../utils/shared-constants';
+
+// Lazy load pages
+const Layout = lazy(() => import('../components/Layout/Layout'));
+const Login = lazy(() => import('../pages/Login'));
+const Register = lazy(() => import('../pages/Register'));
+const Dashboard = lazy(() => import('../pages/Dashboard'));
+const UserManagement = lazy(() => import('../pages/UserManagement'));
+const ChangePassword = lazy(() => import('../pages/ChangePassword'));
+const Profile = lazy(() => import('../pages/Profile'));
+
+// MUI Suspense fallback
+const Loader = (
+  <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
+    <CircularProgress />
+  </Box>
+);
 
 // Route configuration object
 export const routes = [
@@ -65,7 +75,11 @@ export const routes = [
 const router = createBrowserRouter(routes);
 
 const AppRoutes = () => {
-  return <RouterProvider router={router} />;
+  return (
+    <Suspense fallback={Loader}>
+      <RouterProvider router={router} />
+    </Suspense>
+  );
 };
 
 export default AppRoutes; 
