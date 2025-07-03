@@ -11,8 +11,6 @@ import {
   Divider,
   ListItemIcon,
   ListItemText,
-  Select,
-  FormControl,
 } from '@mui/material';
 import {
   AccountCircle,

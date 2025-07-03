@@ -6,15 +6,12 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  Divider,
   useTheme,
   useMediaQuery,
   Toolbar,
 } from '@mui/material';
 import {
   Dashboard,
-  People,
-  Settings,
   Person,
 } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
