@@ -7,7 +7,7 @@ import Dashboard from '../pages/Dashboard';
 import UserManagement from '../pages/UserManagement';
 import ChangePassword from '../pages/ChangePassword';
 import Profile from '../pages/Profile';
-import { ProtectedRoute, AdminRoute, PublicRoute } from '../components/ProtectedRoute/ProtectedRoute';
+import { ProtectedRoute, PublicRoute } from '../components/ProtectedRoute/ProtectedRoute';
 import { USER_ROLES } from '../utils/shared-constants';
 
 // Route configuration object

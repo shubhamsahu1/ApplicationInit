@@ -2,7 +2,6 @@ import React from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { Box, CircularProgress } from '@mui/material';
-import { USER_ROLES } from '../../utils/constants';
 
 // Protected Route Component
 export const ProtectedRoute = ({ children , role}) => {

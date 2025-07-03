@@ -1,9 +1,7 @@
 import React from 'react';
 import { AuthProvider } from './contexts/AuthContext';
 import AppRoutes from './routes/Routes';
-import { Box, Typography, Button } from '@mui/material';
 import ErrorBoundary from './components/ErrorBoundary';
-
 
 
 const App = () => {
