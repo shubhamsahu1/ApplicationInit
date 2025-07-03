@@ -135,32 +135,42 @@ application-init/
 
 ## API Endpoints
 
+### Health Check
+- `GET /health` - Application health status
+
 ### Authentication
-- `POST /api/auth/register` - Register new user
-- `POST /api/auth/login` - User login
+- `POST /api/auth/register` - Register new user (admin only, with validation)
+- `POST /api/auth/login` - User login (with validation)
 - `GET /api/auth/me` - Get current user
-- `POST /api/auth/change-password` - Change password
+- `POST /api/auth/change-password` - Change password (with validation)
 
 ### User Management
 - `GET /api/user/profile` - Get user profile
-- `PUT /api/user/profile` - Update user profile
+- `PUT /api/user/profile` - Update user profile (with validation)
 - `GET /api/user/all` - Get all users (admin only)
+- `POST /api/user/create` - Create new user (admin only, with validation)
+- `PUT /api/user/:id` - Update user (admin only, with validation)
+- `PUT /api/user/:id/password` - Change user password (admin only, with validation)
 - `PUT /api/user/:id/status` - Toggle user status (admin only)
+- `DELETE /api/user/:id` - Delete user (admin only)
 
-## Default User
+All endpoints include comprehensive input validation and security checks.
 
-You can create a default admin user by making a POST request to `/api/auth/register`:
+## Creating Admin User
 
-```json
-{
-  "username": "admin",
-  "email": "admin@example.com",
-  "password": "admin123",
-  "firstName": "Admin",
-  "lastName": "User",
-  "role": "admin"
-}
+Create a secure admin user using the provided script:
+
+```bash
+npm run create-admin
 ```
+
+This will generate a secure random password that meets the following requirements:
+- At least 12 characters long
+- Contains uppercase and lowercase letters
+- Contains numbers and symbols
+- Password is securely generated and displayed once
+
+**Important:** Save the generated password securely as it won't be shown again!
 
 ## Features in Detail
 
@@ -172,10 +182,13 @@ You can create a default admin user by making a POST request to `/api/auth/regis
 - **Error Handling**: Comprehensive error handling and user feedback
 
 ### Backend Features
-- **Security**: Helmet for security headers, CORS configuration
+- **Enhanced Security**: Helmet for security headers, production-ready CORS configuration
 - **Rate Limiting**: Protection against brute force attacks
-- **Input Validation**: Server-side validation for all inputs
+- **Input Validation**: Comprehensive server-side validation with express-validator
 - **Error Handling**: Centralized error handling with proper HTTP status codes
+- **Environment Validation**: Startup validation of required environment variables
+- **Password Security**: Strong password requirements and secure admin generation
+- **Health Monitoring**: Built-in health check endpoint
 - **Database**: MongoDB with Mongoose for data modeling
 
 ## Technologies Used

@@ -1,6 +1,8 @@
 const express = require('express');
 const User = require('../models/User');
 const { auth, adminAuth } = require('../middleware/auth');
+const { validateUserRegistration, validateProfileUpdate, validatePasswordChange, handleValidationErrors } = require('../middleware/validation');
+const { body } = require('express-validator');
 const { USER_ROLES, isValidRole } = require('../../constants/roles');
 
 const router = express.Router();
@@ -27,7 +29,7 @@ router.get('/profile', auth, async (req, res) => {
 // @route   PUT /api/user/profile
 // @desc    Update user profile
 // @access  Private
-router.put('/profile', auth, async (req, res) => {
+router.put('/profile', validateProfileUpdate, auth, async (req, res) => {
   try {
     const { firstName, lastName, mobile, email } = req.body;
     
@@ -99,7 +101,7 @@ router.get('/all', adminAuth, async (req, res) => {
 // @route   POST /api/user/create
 // @desc    Create new user (admin only)
 // @access  Private/Admin
-router.post('/create', adminAuth, async (req, res) => {
+router.post('/create', validateUserRegistration, adminAuth, async (req, res) => {
   try {
     const { username, mobile, password, firstName, lastName, role, email } = req.body;
 
@@ -155,7 +157,7 @@ router.post('/create', adminAuth, async (req, res) => {
 // @route   PUT /api/user/:id
 // @desc    Update user (admin only)
 // @access  Private/Admin
-router.put('/:id', adminAuth, async (req, res) => {
+router.put('/:id', validateProfileUpdate, adminAuth, async (req, res) => {
   try {
     const { firstName, lastName, mobile, role, email } = req.body;
     
@@ -222,7 +224,14 @@ router.put('/:id', adminAuth, async (req, res) => {
 // @route   PUT /api/user/:id/password
 // @desc    Change user password (admin only)
 // @access  Private/Admin
-router.put('/:id/password', adminAuth, async (req, res) => {
+router.put('/:id/password', [
+  body('newPassword')
+    .isLength({ min: 6 })
+    .withMessage('New password must be at least 6 characters long')
+    .matches(/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/)
+    .withMessage('New password must contain at least one lowercase letter, one uppercase letter, and one number'),
+  handleValidationErrors
+], adminAuth, async (req, res) => {
   try {
     const { newPassword } = req.body;
     
