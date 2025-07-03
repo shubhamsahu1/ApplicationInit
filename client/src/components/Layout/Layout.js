@@ -54,8 +54,8 @@ const Layout = () => {
         component="main"
         sx={{
           flexGrow: 1,
-          p: 3,
-          pt: 2,
+          p: 1.5,
+          pt: 1,
           width: { md: `calc(100% - ${drawerWidth}px)` },
           ml: { md: `${drawerWidth}px` },
         }}
