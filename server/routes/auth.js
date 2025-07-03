@@ -2,6 +2,7 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const { auth, adminAuth } = require('../middleware/auth');
+const { validateUserRegistration, validateUserLogin, validatePasswordChange } = require('../middleware/validation');
 const { USER_ROLES, isValidRole } = require('../../constants/roles');
 
 const router = express.Router();
@@ -16,19 +17,27 @@ const generateToken = (userId) => {
 // @route   POST /api/auth/register
 // @desc    Register a new user (Admin only)
 // @access  Private/Admin
-router.post('/register', auth, adminAuth, async (req, res) => {
+router.post('/register', validateUserRegistration, auth, adminAuth, async (req, res) => {
   try {
-    const { username, email, password, firstName, lastName, role } = req.body;
+    const { username, email, password, firstName, lastName, role, mobile } = req.body;
+
+    // Validate required fields
+    if (!mobile) {
+      return res.status(400).json({
+        success: false,
+        message: 'Mobile number is required'
+      });
+    }
 
     // Check if user already exists
     const existingUser = await User.findOne({ 
-      $or: [{ email }, { username }] 
+      $or: [{ email }, { username }, { mobile }] 
     });
 
     if (existingUser) {
       return res.status(400).json({
         success: false,
-        message: 'User with this email or username already exists'
+        message: 'User with this email, username, or mobile number already exists'
       });
     }
 
@@ -47,6 +56,7 @@ router.post('/register', auth, adminAuth, async (req, res) => {
       password,
       firstName,
       lastName,
+      mobile,
       role: role || USER_ROLES.STAFF
     });
 
@@ -71,7 +81,7 @@ router.post('/register', auth, adminAuth, async (req, res) => {
 // @route   POST /api/auth/login
 // @desc    Login user
 // @access  Public
-router.post('/login', async (req, res) => {
+router.post('/login', validateUserLogin, async (req, res) => {
   try {
     const { username, password } = req.body;
 
@@ -143,7 +153,7 @@ router.get('/me', auth, async (req, res) => {
 // @route   POST /api/auth/change-password
 // @desc    Change user password
 // @access  Private
-router.post('/change-password', auth, async (req, res) => {
+router.post('/change-password', validatePasswordChange, auth, async (req, res) => {
   try {
     const { currentPassword, newPassword } = req.body;
 
