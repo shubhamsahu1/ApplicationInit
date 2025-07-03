@@ -9,10 +9,11 @@ import {
 import { Menu as MenuIcon } from '@mui/icons-material';
 import Header from './Header';
 import Sidebar from './Sidebar';
+import { Outlet } from 'react-router-dom';
 
 const drawerWidth = 240;
 
-const Layout = ({ children }) => {
+const Layout = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -60,7 +61,7 @@ const Layout = ({ children }) => {
         }}
       >
         <Toolbar />
-        {children}
+        <Outlet />
       </Box>
     </Box>
   );
