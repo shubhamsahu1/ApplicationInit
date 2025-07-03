@@ -8,6 +8,7 @@ import UserManagement from '../pages/UserManagement';
 import ChangePassword from '../pages/ChangePassword';
 import Profile from '../pages/Profile';
 import { ProtectedRoute, AdminRoute, PublicRoute } from '../components/ProtectedRoute/ProtectedRoute';
+import { USER_ROLES } from '../utils/shared-constants';
 
 // Route configuration object
 export const routes = [
@@ -51,9 +52,9 @@ export const routes = [
       {
         path: "user-management",
         element: (
-          <AdminRoute>
+          <ProtectedRoute role={USER_ROLES.ADMIN}>
             <UserManagement />
-          </AdminRoute>
+          </ProtectedRoute>
         ),
       },
     ],

@@ -5,27 +5,7 @@ import { Box, CircularProgress } from '@mui/material';
 import { USER_ROLES } from '../../utils/constants';
 
 // Protected Route Component
-export const ProtectedRoute = ({ children }) => {
-  const { isAuthenticated, loading } = useAuth();
-
-  if (loading) {
-    return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        minHeight="100vh"
-      >
-        <CircularProgress />
-      </Box>
-    );
-  }
-
-  return isAuthenticated ? children : <Navigate to="/login" replace />;
-};
-
-// Admin Route Component
-export const AdminRoute = ({ children }) => {
+export const ProtectedRoute = ({ children , role}) => {
   const { isAuthenticated, loading, user } = useAuth();
 
   if (loading) {
@@ -45,12 +25,13 @@ export const AdminRoute = ({ children }) => {
     return <Navigate to="/login" replace />;
   }
 
-  if (user?.role !== USER_ROLES.ADMIN) {
+  if (role && user?.role !== role) {
     return <Navigate to="/dashboard" replace />;
   }
 
   return children;
 };
+
 
 // Public Route Component (redirects to dashboard if already authenticated)
 export const PublicRoute = ({ children }) => {
