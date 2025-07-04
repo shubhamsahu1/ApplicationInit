@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   AppBar,
   Toolbar,
@@ -21,15 +21,23 @@ import {
 } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { USER_ROLES } from '../../utils/constants';
 
 const Header = () => {
   const { t, i18n } = useTranslation();
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [anchorEl, setAnchorEl] = useState(null);
   const [langAnchorEl, setLangAnchorEl] = useState(null);
+
+  // Close menu when location changes (navigation occurs)
+  useEffect(() => {
+    setAnchorEl(null);
+    setLangAnchorEl(null);
+  }, [location.pathname]);
+
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -97,13 +105,13 @@ const Header = () => {
           </IconButton>
           
           <Menu
+            key={location.pathname} // Force re-render on navigation
             id="menu-appbar"
             anchorEl={anchorEl}
             anchorOrigin={{
               vertical: 'bottom',
               horizontal: 'right',
             }}
-            keepMounted
             transformOrigin={{
               vertical: 'top',
               horizontal: 'right',
@@ -146,6 +154,7 @@ const Header = () => {
             </MenuItem>
           </Menu>
           <Menu
+            key={`lang-${location.pathname}`} // Force re-render on navigation
             id="lang-menu"
             anchorEl={langAnchorEl}
             open={Boolean(langAnchorEl)}
