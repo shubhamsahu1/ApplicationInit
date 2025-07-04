@@ -22,18 +22,8 @@ if (!fs.existsSync('.env')) {
   console.log('✅ .env file already exists.\n');
 }
 
-// Check if client .env file exists
-if (!fs.existsSync('client/.env')) {
-  console.log('📝 Creating client .env file...');
-  const clientEnvContent = `# Frontend Configuration
-REACT_APP_API_URL=${process.env.REACT_APP_API_URL}
-REACT_APP_NAME=${process.env.REACT_APP_NAME}`;
-  
-  fs.writeFileSync('client/.env', clientEnvContent);
-  console.log('✅ Client .env file created successfully!\n');
-} else {
-  console.log('✅ Client .env file already exists.\n');
-}
+// Using unified root .env file for both backend and frontend
+console.log('✅ Using unified root .env file for both backend and frontend.\n');
 
 // Install dependencies
 console.log('📦 Installing root dependencies...');
